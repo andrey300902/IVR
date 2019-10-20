@@ -1,6 +1,5 @@
 import pygame
 
-
 class GUI:
 
     def __init__(self):
@@ -77,28 +76,42 @@ class Button(Label):
     def get_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self.pressed = self.rect.collidepoint(event.pos)
+            return self.pressed
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.pressed = False
+        return False
 
 
 class CheckBox(Label):
     def __init__(self, rect, text):
         super().__init__(rect, text)
-        self.check = pygame.Rect([self.rect.x+self.rect.width+5, self.rect.y, self.rect.height, self.rect.height])
-        self.pressed = False
+        self.check1 = pygame.Rect([self.rect.x+self.rect.width+5, self.rect.y, self.rect.height, self.rect.height])
+        self.check2 = pygame.Rect([self.rect.x+self.rect.width+40, self.rect.y, self.rect.height, self.rect.height])
+        self.pressed1 = False
+        self.pressed2 = False
 
     def render(self, surface):
         self.rendered_text = self.font.render(self.text, 1, self.font_color)
         self.rendered_rect = self.rendered_text.get_rect(x=self.rect.x + 2, centery=self.rect.centery)
-        pygame.draw.rect(surface, (255, 255, 255), [self.rect.x+self.rect.width+5, self.rect.y, self.rect.height, self.rect.height])
-        if self.pressed:
+        pygame.draw.rect(surface, (255, 255, 255), self.check1)
+        pygame.draw.rect(surface, (255, 255, 255), self.check2)
+
+        if self.pressed1:
             pygame.draw.rect(surface, (0, 0, 0),
                              [self.rect.x + self.rect.width + 7, self.rect.y+2, self.rect.height-4, self.rect.height-4])
+        if self.pressed2:
+            pygame.draw.rect(surface, (0, 0, 0),
+                             [self.rect.x + self.rect.width + 42, self.rect.y+2, self.rect.height-4, self.rect.height-4])
         surface.blit(self.rendered_text, self.rendered_rect)
 
     def get_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and self.check.collidepoint(event.pos):
-            self.pressed = not self.pressed
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.check1.collidepoint(event.pos):
+                self.pressed1 = not self.pressed1
+                self.pressed2 = False
+            if self.check2.collidepoint(event.pos):
+                self.pressed2 = not self.pressed2
+                self.pressed1 = False
 
 
 class Flash(Label):
