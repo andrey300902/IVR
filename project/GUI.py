@@ -29,6 +29,7 @@ class GUI:
                     return res
 
 
+
 class Label:
 
     def __init__(self, rect, text):
@@ -52,7 +53,7 @@ class Button(Label):
 
     def __init__(self, rect, text):
         super().__init__(rect, text)
-        self.bgcolor = pygame.Color("blue")
+        self.bgcolor = pygame.Color("orange")
         self.pressed = False
 
     def render(self, surface):
@@ -82,7 +83,7 @@ class Button(Label):
         return False
 
 
-class CheckBox(Label):
+class CheckBox2(Label):
     def __init__(self, rect, text):
         super().__init__(rect, text)
         self.check1 = pygame.Rect([self.rect.x+self.rect.width+5, self.rect.y, self.rect.height, self.rect.height])
@@ -204,3 +205,23 @@ class TextBox(Label):
                          (self.rect.right, self.rect.bottom - 1), 2)
 
 
+class CheckBox(Label):
+    def __init__(self, rect, text):
+        super().__init__(rect, text)
+        self.check = pygame.Rect([self.rect.x+self.rect.width+5, self.rect.y, self.rect.height, self.rect.height])
+        self.pressed = False
+
+    def render(self, surface):
+        self.rendered_text = self.font.render(self.text, 1, self.font_color)
+        self.rendered_rect = self.rendered_text.get_rect(x=self.rect.x + 2, centery=self.rect.centery)
+        pygame.draw.rect(surface, (255, 255, 255), self.check)
+
+        if self.pressed:
+            pygame.draw.rect(surface, (0, 0, 0),
+                             [self.rect.x + self.rect.width + 7, self.rect.y+2, self.rect.height-4, self.rect.height-4])
+        surface.blit(self.rendered_text, self.rendered_rect)
+
+    def get_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.check.collidepoint(event.pos):
+                self.pressed = not self.pressed
